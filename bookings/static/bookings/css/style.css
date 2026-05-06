@@ -1,0 +1,287 @@
+/* =========================================
+   1. STYLE GLOBALNE I RESET
+   ========================================= */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    color: #333;
+}
+
+/* =========================================
+   2. NAWIGACJA (Navbar)
+   ========================================= */
+.navbar {
+    background-color: #d63384;
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.navbar a, .navbar button {
+    color: white;
+    text-decoration: none;
+    background: none;
+    border: 1px solid white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: 0.3s;
+}
+
+.navbar a:hover, .navbar button:hover {
+    background: white;
+    color: #d63384;
+}
+
+/* =========================================
+   3. SEKCJA POWITALNA (Hero)
+   ========================================= */
+.hero {
+    background: linear-gradient(rgba(214, 51, 132, 0.8), rgba(214, 51, 132, 0.6)), 
+                url('https://images.unsplash.com/photo-1560750588-73207b1ef5b8?auto=format&fit=crop&w=1350&q=80');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero h1 { 
+    font-size: 3rem; 
+    margin-bottom: 10px; 
+    color: white; 
+}
+
+/* =========================================
+   4. UKŁAD GŁÓWNY (Main Layout)
+   ========================================= */
+.main-layout {
+    display: flex;
+    gap: 30px;
+    max-width: 1300px; /* Nieco szerzej dla lepszego oddechu */
+    margin: 40px auto; /* Większy odstęp od banera Hero */
+    padding: 0 20px;
+    align-items: flex-start;
+}
+
+.services-column {
+    flex: 2.5;
+}
+
+/* =========================================
+   5. KARTY USŁUG
+   ========================================= */
+.services-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.service-row {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    text-align: center;
+    min-height: 280px;
+}
+
+.service-row:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(214, 51, 132, 0.1);
+    border-color: #d63384;
+}
+
+.service-icon {
+    font-size: 2.5rem;
+    color: #d63384;
+    margin-bottom: 15px;
+}
+
+.service-details h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.3rem;
+}
+
+.service-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.service-price {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #d63384;
+    margin-bottom: 15px;
+}
+
+.btn-book {
+    background-color: #d63384;
+    color: white;
+    padding: 10px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-book:hover {
+    background-color: #b02a6a;
+}
+
+/* =========================================
+   6. SIDEBAR I KALENDARZ (FullCalendar)
+   ========================================= */
+/* Kontener Sidebaru */
+.calendar-sidebar {
+    flex: 1.2;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+    /* Usuwamy ewentualny margines górny, by wyrównać z usługami */
+    margin-top: 0; 
+}
+
+.sidebar-card {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+}
+
+/* Układ Toolbara: Przyciski obok Tytułu */
+.fc .fc-toolbar {
+    display: flex !important;
+    flex-direction: row !important;
+    /* Centrujemy całość, by przyciski były blisko tekstu */
+    justify-content: center !important; 
+    align-items: center !important;
+    gap: 10px !important;
+    margin-bottom: 20px !important;
+    padding: 0 !important;
+}
+
+/* Układamy elementy wewnątrz toolbara w jednej linii */
+.fc-toolbar-chunk {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 0.9rem !important;
+    color: #d63384 !important;
+    text-transform: capitalize;
+    margin: 0 !important; /* Reset marginesu dla precyzji */
+    font-weight: bold;
+}
+
+/* Stylizacja małych przycisków < > */
+.fc .fc-button {
+    background-color: transparent !important;
+    border: 1px solid #d63384 !important;
+    color: #d63384 !important;
+    padding: 2px 6px !important;
+    font-size: 0.65rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 4px !important;
+    height: 24px !important;
+    width: 24px !important;
+}
+
+.fc .fc-button:hover {
+    background-color: #d63384 !important;
+    color: white !important;
+}
+
+/* Naprawa siatki dni - symetria */
+#calendar {
+    max-width: 100%;
+    font-size: 0.75rem;
+}
+
+.fc-col-header-cell-cushion {
+    font-size: 0.65rem !important;
+    text-transform: uppercase;
+    color: #555;
+    padding: 8px 0 !important;
+    display: block !important;
+}
+
+.fc-daygrid-day-number {
+    font-size: 0.75rem;
+    padding: 4px !important;
+    text-decoration: none !important;
+    color: #333;
+}
+
+.fc-daygrid-day-frame {
+    min-height: 35px !important;
+    border: none !important; /* Usuwamy ramki wewnętrzne dla czystszego widoku */
+}
+
+/* =========================================
+   7. MODALE I ALERTY
+   ========================================= */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 400px;
+    position: relative;
+}
+
+.close {
+    position: absolute; right: 20px; top: 10px;
+    font-size: 24px; cursor: pointer; color: #aaa;
+}
+
+.alert {
+    padding: 15px;
+    margin: 10px;
+    border-radius: 5px;
+    color: white;
+    background-color: #28a745;
+    text-align: center;
+}
+
+/* =========================================
+   8. RESPONSYWNOŚĆ
+   ========================================= */
+@media (max-width: 992px) {
+    .main-layout { 
+        flex-direction: column; 
+    }
+    .calendar-sidebar { 
+        width: 100%; 
+        position: static; 
+    }
+    .navbar {
+        padding: 15px 20px;
+    }
+}

@@ -1,46 +1,118 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rezerwacja - {{ service.name }}</title>
+    
+    <!-- Główne style aplikacji -->
+    <link rel="stylesheet" href="{% static 'bookings/css/style.css' %}">
+    
+    <!-- Style kalendarza Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+
     <style>
-        body { font-family: sans-serif; background-color: #f9f9f9; color: #333; padding-top: 50px; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h2 { color: #d63384; text-align: center; }
-        .form-control { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .btn-submit { background-color: #d63384; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 15px;}
-        .btn-submit:hover { background-color: #b02a6a; }
-        .back-link { display: block; text-align: center; margin-top: 15px; color: #555; text-decoration: none; }
+        /* Dodatkowe style specyficzne dla strony rezerwacji */
+        .booking-container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .service-info {
+            text-align: center;
+            background: #fff5f8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px dashed #d63384;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        .btn-submit {
+            background-color: #d63384;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #b02a6a;
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Rezerwacja: {{ service.name }}</h2>
-        <p style="text-align: center;">Czas trwania: {{ service.duration_minutes }} min | Cena: {{ service.price }} zł</p>
-        
-        <form method="POST">
-        {% csrf_token %}
-        
-        {% if form.non_field_errors %}
-            <div style="color: red; background: #fee; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                {{ form.non_field_errors }}
-            </div>
-        {% endif %}
 
-        {% for field in form %}
-            <div class="form-group">
-                {{ field.label_tag }}
-                {{ field }}
-                {% if field.errors %}
-                    <div style="color: red; font-size: 12px;">{{ field.errors }}</div>
-                {% endif %}
-            </div>
-        {% endfor %}
+    <div class="booking-container">
+        <h2>Rezerwacja usługi</h2>
         
-        <button type="submit" class="btn-submit">Potwierdź rezerwację</button>
-    </form>
+        <div class="service-info">
+            <h3 style="margin: 0; color: #d63384;">{{ service.name }}</h3>
+            <p style="margin: 5px 0 0 0;">
+                <i class="far fa-clock"></i> {{ service.duration_minutes }} min | 
+                <strong>{{ service.price }} zł</strong>
+            </p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Błędy ogólne formularza -->
+            {% if form.non_field_errors %}
+                <div style="color: white; background: #dc3545; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- Pola formularza (Pracownik, Data, Godzina) -->
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div style="color: #dc3545; font-size: 13px; margin-top: 5px;">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn-submit">Potwierdź rezerwację</button>
+        </form>
         
-        <a href="{% url 'index' %}" class="back-link">← Powrót do cennika</a>
+        <a href="{% url 'index' %}" class="back-link" style="display: block; text-align: center; margin-top: 20px; color: #888; text-decoration: none;">
+            ← Wróć do cennika
+        </a>
     </div>
+
+    <!-- Skrypty biblioteki Flatpickr (Kalendarz) -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/pl.js"></script>
+    
+    <!-- Twój główny plik JavaScript -->
+    <script src="{% static 'bookings/js/main.js' %}"></script>
+
 </body>
 </html>

@@ -13,10 +13,12 @@ class Staff(models.Model):
 
 # 2. Model Usługi - definiuje ofertę salonu
 class Service(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Nazwa usługi")
-    description = models.TextField(blank=True, verbose_name="Opis usługi")
-    price = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Cena (zł)")
-    duration_minutes = models.IntegerField(verbose_name="Czas trwania (minuty)")
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True) # Nowe pole na krótki opis
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    duration_minutes = models.IntegerField()
+    # Ikona (użyjemy klas FontAwesome, np. "fa-magic")
+    icon_class = models.CharField(max_length=50, default="fa-sparkles")
 
     def __str__(self):
         return self.name
