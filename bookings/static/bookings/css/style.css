@@ -416,7 +416,74 @@ body {
 }
 
 /* =========================================
-   10. RESPONSYWNOŚĆ
+   10. MODALE LOGOWANIA I REJESTRACJI
+   ========================================= */
+
+/* 1. Stylizacja samej karty modalu (Spójna z "Twoje Rezerwacje") */
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px; /* Zaokrąglone rogi karty */
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); /* Delikatny cień */
+    border: 1px solid #eee;
+}
+
+/* 2. Stylizacja tytułu h2 w modalu (np. "Zaloguj się") */
+.modal-content h2 {
+    color: #d63384; /* Twój różowy kolor przewodni */
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* 3. Stylizacja pól wejściowych (Inputów) wewnątrz formularzy modalu */
+.modal-content form input[type="text"],
+.modal-content form input[type="password"] {
+    width: 100%; /* Pełna szerokość karty */
+    padding: 12px; /* Więcej miejsca wewnątrz */
+    margin-bottom: 15px; /* Odstęp od kolejnego pola */
+    border: 1px solid #ccc; /* Delikatne obramowanie */
+    border-radius: 8px; /* Zaokrąglone rogi */
+    font-family: inherit; /* Użyj czcionki projektu */
+    font-size: 0.95rem;
+    color: #555;
+    transition: 0.3s; /* Płynna zmiana koloru */
+    box-sizing: border-box; /* Zapewnia poprawną szerokość */
+}
+
+/* Efekt po kliknięciu w pole (Focus) */
+.modal-content form input[type="text"]:focus,
+.modal-content form input[type="password"]:focus {
+    border-color: #d63384; /* Różowe obramowanie */
+    box-shadow: 0 0 5px rgba(214, 51, 132, 0.1); /* Delikatna poświata */
+    outline: none; /* Usuń standardową ramkę */
+}
+
+/* 4. Stylizacja przycisku wysyłania (Submit) */
+.modal-content form input[type="submit"],
+.modal-content form button[type="submit"] {
+    width: 100%; /* Pełna szerokość */
+    background-color: #d63384; /* Różowe tło */
+    color: white; /* Biały tekst */
+    border: none; /* Usuń surowe obramowanie */
+    padding: 12px;
+    border-radius: 20px; /* Zaokrąglone rogi przycisku */
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.modal-content form input[type="submit"]:hover,
+.modal-content form button[type="submit"]:hover {
+    background-color: #b02a6a; /* Ciemniejszy róż na hover */
+}
+
+/* =========================================
+   11. RESPONSYWNOŚĆ
    ========================================= */
 @media (max-width: 992px) {
     .main-layout { 

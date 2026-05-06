@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulpit Zarządzania - Salon Urody</title>
+    <link rel="stylesheet" href="{% static 'bookings/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* --- Istniejące style (Karty i Siatka) --- */
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .kpi-card {
+            background: linear-gradient(135deg, #d63384, #b02a6a);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .kpi-card h3 { margin: 0; font-size: 1rem; opacity: 0.9; }
+        .kpi-card p { margin: 5px 0 0 0; font-size: 1.8rem; font-weight: bold; }
+        .kpi-icon { font-size: 2.5rem; opacity: 0.5; }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        .dashboard-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 5px solid #d63384;
+            height: fit-content;
+        }
+        .admin-appointment-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-appointment-item:last-child { border-bottom: none; }
+
+        /* --- NOWE STYLE (Przyciski akcji) --- */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Styl dla: Zatwierdź (Zielony) */
+        .btn-success-light {
+            background-color: #e6fffa;
+            color: #38b2ac;
+            border: 1px solid #38b2ac;
+        }
+        .btn-success-light:hover { background-color: #38b2ac; color: white; }
+
+        /* Styl dla: Zakończ wizytę (Niebieski) */
+        .btn-info-light {
+            background-color: #ebf8ff;
+            color: #4299e1;
+            border: 1px solid #4299e1;
+        }
+        .btn-info-light:hover { background-color: #4299e1; color: white; }
+
+        /* Styl dla: Odwołaj (Czerwony) */
+        .btn-danger-light {
+            background-color: #fff5f5;
+            color: #f56565;
+            border: 1px solid #f56565;
+        }
+        .btn-danger-light:hover { background-color: #f56565; color: white; }
+
+        /* Statusy (Badges) */
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+        .bg-warning { background-color: #ff9800; }
+        .bg-info { background-color: #2196f3; }
+        .bg-success { background-color: #4caf50; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo"><strong>Salon Urody - Zaplecze</strong></div>
+        <div class="nav-links">
+            <span class="welcome-text">Witaj Szefie, {{ user.username }}!</span>
+            <a href="{% url 'index' %}" class="btn-nav" style="text-decoration:none; color:white; border:1px solid white; padding:5px 15px; border-radius:20px;">Wróć na stronę</a>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 1300px; margin: 40px auto; padding: 0 20px;">
+        <h1 style="color: #333; margin-bottom: 30px;">Przegląd Biznesowy</h1>
+        
+        <div class="kpi-container">
+            <div class="kpi-card">
+                <div>
+                    <h3>Zarobki (Ten miesiąc)</h3>
+                    <p>{{ month_revenue }} zł</p>
+                </div>
+                <i class="fas fa-wallet kpi-icon"></i>
+            </div>
+            <div class="kpi-card" style="background: linear-gradient(135deg, #2196f3, #0d47a1);">
+                <div>
+                    <h3>Przewidywany utarg (Dziś)</h3>
+                    <p>{{ today_revenue }} zł</p>
+                </div>
+                <i class="fas fa-coins kpi-icon"></i>
+            </div>
+            <div class="kpi-card" style="background: linear-gradient(135deg, #ff9800, #e65100);">
+                <div>
+                    <h3>Do zatwierdzenia</h3>
+                    <p>{{ pending_appointments.count }}</p>
+                </div>
+                <i class="fas fa-user-clock kpi-icon"></i>
+            </div>
+        </div>
+        
+        <div class="dashboard-grid">
+            
+            <div>
+                <div class="dashboard-card" style="margin-bottom: 30px; border-top-color: #ff9800;">
+                    <h3 style="color: #ff9800; margin-top: 0;"><i class="fas fa-bell"></i> Wymagają Twojej akcji (Z WWW)</h3>
+                    {% for app in pending_appointments %}
+                        <div class="admin-appointment-item">
+                            <div>
+                                <strong>{{ app.client.first_name|default:app.client.username }}</strong> - {{ app.service.name }}<br>
+                                <small><i class="far fa-calendar"></i> {{ app.date }} | <i class="far fa-clock"></i> {{ app.time|time:"H:i" }}</small>
+                            </div>
+                            <div class="action-buttons">
+                                <a href="{% url 'update_status' app.id 'CONFIRMED' %}" class="btn-small btn-success-light">
+                                    <i class="fas fa-check"></i> Zatwierdź
+                                </a>
+                                <a href="{% url 'update_status' app.id 'CANCELED' %}" 
+                                onclick="return confirm('Odwołać tę wizytę?')" 
+                                class="btn-small btn-danger-light">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p style="color: #777; font-style: italic;">Brak nowych rezerwacji do potwierdzenia.</p>
+                    {% endfor %}
+                </div>
+
+                <div class="dashboard-card" style="border-top-color: #2196f3;">
+                    <h3 style="color: #2196f3; margin-top: 0;"><i class="fas fa-calendar-day"></i> Grafik na dzisiaj</h3>
+                    {% for app in today_appointments %}
+                        <div class="admin-appointment-item">
+                            <div>
+                                <strong>{{ app.time|time:"H:i" }}</strong> - {{ app.client.username }}<br>
+                                <small>{{ app.service.name }}</small>
+                            </div>
+                            <div class="action-buttons">
+                                {% if app.status == 'CONFIRMED' %}
+                                    <a href="{% url 'update_status' app.id 'COMPLETED' %}" class="btn-small btn-info-light">
+                                        <i class="fas fa-hand-sparkles"></i> Zakończ wizytę
+                                    </a>
+                                {% else %}
+                                    <span class="status-badge {% if app.status == 'COMPLETED' %}bg-success{% else %}bg-warning{% endif %}">
+                                        {{ app.get_status_display }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p style="color: #777; font-style: italic;">Dzisiaj nie masz jeszcze żadnych wizyt.</p>
+                    {% endfor %}
+                </div>
+            <div class="dashboard-card" style="border-top-color: #4caf50;">
+                <h3 style="color: #4caf50; margin-top: 0;"><i class="fas fa-chart-pie"></i> Popularność w miesiącu</h3>
+                <canvas id="servicesChart" style="margin-top: 20px;"></canvas>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Wybieramy miejsce, gdzie ma narysować się wykres (tag canvas)
+            const ctx = document.getElementById('servicesChart').getContext('2d');
+            
+            // 2. Pobieramy dane z przygotowanych wyżej przez Django ukrytych skryptów JSON
+            // JSON.parse() zamienia tekst na tablicę w JS. VS Code już nie będzie tu widział błędu!
+            const labels = JSON.parse(document.getElementById('labels-data').textContent);
+            const data = JSON.parse(document.getElementById('chart-data-values').textContent);
+
+            // 3. Zabezpieczenie: Jeśli nie ma danych, pokaż komunikat zamiast pustego obrazka
+            if (labels.length === 0) {
+                document.getElementById('servicesChart').outerHTML = "<p style='color:#777; text-align:center;'>Brak zakończonych wizyt w tym miesiącu do wygenerowania wykresu.</p>";
+                return; // Zatrzymuje dalsze rysowanie wykresu
+            }
+
+            // 4. Konfiguracja wykresu Chart.js
+            new Chart(ctx, {
+                type: 'doughnut', // 'doughnut' oznacza wykres w kształcie pączka (z dziurą w środku)
+                data: {
+                    labels: labels, // Przypisujemy nazwy usług
+                    datasets: [{
+                        data: data, // Przypisujemy ilość rezerwacji
+                        backgroundColor: [
+                            // Kolory fragmentów wykresu (pasujące do Twojego salonu)
+                            '#d63384', '#2196f3', '#ff9800', '#4caf50', '#9c27b0', '#00bcd4'
+                        ],
+                        borderWidth: 0 // Usuwamy brzydkie ramki wokół kolorów
+                    }]
+                },
+                options: {
+                    responsive: true, // Wykres dopasuje się do ekranu komórki/komputera
+                    plugins: {
+                        legend: { position: 'bottom' } // Legenda kolorów pod wykresem
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

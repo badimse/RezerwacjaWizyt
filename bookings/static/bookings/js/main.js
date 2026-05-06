@@ -241,3 +241,4 @@ function wybierzGodzine(kliknietyElement, godzina) {
     btnSubmit.disabled = false;
     btnSubmit.style.opacity = '1';
 }
+

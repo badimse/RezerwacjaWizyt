@@ -6,16 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Salon Urody - Rezerwacja</title>
     
-    <!-- Główne style CSS -->
     <link rel="stylesheet" href="{% static 'bookings/css/style.css' %}">
-    <!-- Ikony FontAwesome (opcjonalnie, dla lepszego wyglądu) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 </head>
 <body>
 
-    <!-- WIADOMOŚCI SYSTEMOWE (Success/Error) -->
     {% if messages %}
         <div id="messages-container">
             {% for message in messages %}
@@ -26,14 +22,18 @@
         </div>
     {% endif %}
 
-    <!-- PASEK NAWIGACJI -->
     <div class="navbar">
         <div class="logo"><strong>Salon Urody</strong></div>
         <div class="nav-links">
             {% if user.is_authenticated %}
                 <span class="welcome-text">Witaj, {{ user.username }}!</span>
+                
+                {% if user.is_staff %}
+                    <a href="{% url 'dashboard' %}" style="background-color: white; color: #d63384; font-weight: bold; border-radius: 20px; padding: 5px 15px; text-decoration: none; margin-left: 10px; margin-right: 10px;">Mój Pulpit</a>
+                {% endif %}
+
                 <button onclick="openModal('appointmentsModal')" class="btn-nav">Moje wizyty</button>
-                <a href="{% url 'logout' %}" class="btn-logout">Wyloguj się</a>
+                <a href="{% url 'logout' %}" class="btn-logout" style="text-decoration: none; color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; margin-left: 10px;">Wyloguj się</a>
             {% else %}
                 <button onclick="openModal('loginModal')">Zaloguj się</button>
                 <button onclick="openModal('registerModal')">Zarejestruj się</button>
@@ -41,58 +41,44 @@
         </div>
     </div>
 
-    <!-- Sekcja Hero nad kontenerem -->
     <div class="hero">
         <h1>Twój Blask, Nasza Pasja</h1>
         <p>Zarezerwuj chwilę dla siebie w najlepszym salonie w mieście.</p>
     </div>
 
-    <div class="container">
-        <!-- Sekcja główna z układem kolumnowym -->
-        <div class="container main-layout">
-            
-            <!-- KOLUMNA LEWA: USŁUGI -->
-            <div class="services-column">
-                <h2 class="section-title">Nasze Usługi</h2>
-                <div class="services-list">
-                    {% for service in services %}
-                        <div class="service-row">
-                            <div class="service-details">
-                                <div class="service-icon">
-                                    <i class="fas {{ service.icon_class }}"></i>
-                                </div>
-                                <h3>{{ service.name }}</h3>
-                                <p class="service-description">{{ service.description|default:"Profesjonalna pielęgnacja dopasowana do Twoich potrzeb." }}</p>
-                                <p><i class="far fa-clock"></i> {{ service.duration_minutes }} min</p>
+    <div class="container main-layout">
+        
+        <div class="services-column">
+            <h2 class="section-title">Nasze Usługi</h2>
+            <div class="services-list">
+                {% for service in services %}
+                    <div class="service-row">
+                        <div class="service-details">
+                            <div class="service-icon">
+                                <i class="fas {{ service.icon_class }}"></i>
                             </div>
-                            <div class="service-price">{{ service.price }} zł</div>
-                            <button class="btn-book" onclick="otworzModalRezerwacji('{{ service.id }}', '{{ service.name }}')" style="border: none; cursor: pointer; width: 100%;">Zarezerwuj teraz</button>
+                            <h3>{{ service.name }}</h3>
+                            <p class="service-description">{{ service.description|default:"Profesjonalna pielęgnacja dopasowana do Twoich potrzeb." }}</p>
+                            <p><i class="far fa-clock"></i> {{ service.duration_minutes }} min</p>
                         </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- KOLUMNA PRAWA: PODGLĄD KALENDARZA (Tylko dla zalogowanych) -->
-            {% if user.is_authenticated %}
-            <div class="calendar-sidebar">
-                <div class="sidebar-card">
-                    <h3><i class="far fa-calendar-check"></i> Podgląd terminów</h3>
-                    <p class="small-text">Sprawdź dostępność w tym miesiącu:</p>
-                    <!-- Tutaj w przyszłym kroku pojawi się kalendarz -->
-                    <div id="calendar-preview-placeholder">
-                        <div class="calendar-mockup">
-                            <div id="calendar-preview-placeholder">
-                            <!-- FullCalendar wstawi swój kod -->
-                                <div id="calendar"></div>
-                            </div>
-                        </div>
+                        <div class="service-price">{{ service.price }} zł</div>
+                        <button class="btn-book" onclick="otworzModalRezerwacji('{{ service.id }}', '{{ service.name }}')" style="border: none; cursor: pointer; width: 100%;">Zarezerwuj teraz</button>
                     </div>
-                </div>
+                {% endfor %}
             </div>
-            {% endif %}
         </div>
 
-    <!-- MODAL LOGOWANIA -->
+        {% if user.is_authenticated %}
+        <div class="calendar-sidebar">
+            <div class="sidebar-card">
+                <h3><i class="far fa-calendar-check"></i> Podgląd terminów</h3>
+                <p class="small-text">Sprawdź dostępność w tym miesiącu:</p>
+                <div id="calendar"></div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('loginModal')">&times;</span>
@@ -106,7 +92,6 @@
         </div>
     </div>
 
-    <!-- MODAL REJESTRACJI -->
     <div id="registerModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('registerModal')">&times;</span>
@@ -121,7 +106,6 @@
         </div>
     </div>
 
-    <!-- MODAL MOJE WIZYTY -->
     <div id="appointmentsModal" class="modal">
         <div class="modal-content appointments-modal">
             <span class="close" onclick="closeModal('appointmentsModal')">&times;</span>
@@ -146,7 +130,6 @@
         </div>
     </div>
 
-    <!-- Modal Rezerwacji z kolumny usługi -->
     <div id="bookingModal" class="modal">
         <div class="modal-content" style="max-width: 500px;">
             <span class="close" onclick="closeModal('bookingModal')">&times;</span>
@@ -177,16 +160,6 @@
         </div>
     </div>
 
-    <!-- Modal szczegółów dnia -->
-    <div id="dayDetailsModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('dayDetailsModal')">&times;</span>
-            <div id="dayDetailsContent">
-                <!-- Tutaj JavaScript wstawi dane -->
-            </div>
-        </div>
-    </div>
-
     <div id="dayDetailsModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('dayDetailsModal')">&times;</span>
@@ -196,7 +169,6 @@
         </div>
     </div>
 
-    <!-- Główny plik JavaScript -->
     <script src="{% static 'bookings/js/main.js' %}"></script>
 </body>
 </html>

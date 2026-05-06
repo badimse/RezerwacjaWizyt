@@ -16,11 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-# Dodaj api_wizyty_dnia do listy poniżej:
+# TUTAJ DODALIŚMY 'update_status' NA KOŃCU LISTY:
 from bookings.views import (
     index, register_view, login_view, logout_view, 
-    book_appointment, cancel_appointment, api_wizyty_dnia
+    book_appointment, cancel_appointment, api_wizyty_dnia, 
+    custom_dashboard, update_status
 )
+
+admin.site.site_header = "Panel Zarządzania Salonem"
+admin.site.site_title = "Admin Salonu"
+admin.site.index_title = "Witaj w centrum dowodzenia"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +35,8 @@ urlpatterns = [
     path('wyloguj/', logout_view, name='logout'),
     path('rezerwuj/<int:service_id>/', book_appointment, name='book_appointment'),
     path('cancel/<int:appointment_id>/', cancel_appointment, name='cancel_appointment'),
-    # Tutaj usuwamy "views.", bo zaimportowaliśmy funkcję bezpośrednio:
     path('api/wizyty/<str:data_str>/', api_wizyty_dnia, name='api_wizyty_dnia'),
+    path('dashboard/', custom_dashboard, name='dashboard'),
+    # Teraz ta linia zadziała, bo Django "widzi" już funkcję update_status
+    path('update-status/<int:appointment_id>/<str:new_status>/', update_status, name='update_status'),
 ]
