@@ -66,7 +66,7 @@
                                 <p><i class="far fa-clock"></i> {{ service.duration_minutes }} min</p>
                             </div>
                             <div class="service-price">{{ service.price }} zł</div>
-                            <a href="{% url 'book_appointment' service.id %}" class="btn-book">Zarezerwuj teraz</a>
+                            <button class="btn-book" onclick="otworzModalRezerwacji('{{ service.id }}', '{{ service.name }}')" style="border: none; cursor: pointer; width: 100%;">Zarezerwuj teraz</button>
                         </div>
                     {% endfor %}
                 </div>
@@ -146,12 +146,52 @@
         </div>
     </div>
 
+    <!-- Modal Rezerwacji z kolumny usługi -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close" onclick="closeModal('bookingModal')">&times;</span>
+            
+            <h2 id="bookingModalTitle" style="color: #d63384; margin-top: 0;">Rezerwacja</h2>
+            
+            <form id="bookingForm" method="POST" action="">
+                {% csrf_token %}
+                
+                <div style="margin-bottom: 20px;">
+                    <label for="bookingDate" style="font-weight: bold; display: block; margin-bottom: 5px;">1. Wybierz datę:</label>
+                    <input type="date" id="bookingDate" name="date" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">2. Wybierz godzinę:</label>
+                    <div id="bookingTimeSlots" class="time-slot-container">
+                        <p style="color: #777; font-style: italic;">Najpierw wybierz datę z pola powyżej.</p>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="bookingTime" name="time" required>
+                
+                <button type="submit" id="submitBookingBtn" class="btn-book" style="width: 100%; border: none; cursor: pointer; opacity: 0.5;" disabled>
+                    Potwierdź rezerwację
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal szczegółów dnia -->
     <div id="dayDetailsModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('dayDetailsModal')">&times;</span>
             <div id="dayDetailsContent">
                 <!-- Tutaj JavaScript wstawi dane -->
+            </div>
+        </div>
+    </div>
+
+    <div id="dayDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('dayDetailsModal')">&times;</span>
+            <div id="dayDetailsContent">
+                <p>Ładowanie terminów...</p>
             </div>
         </div>
     </div>

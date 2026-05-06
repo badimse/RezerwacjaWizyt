@@ -16,7 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from bookings.views import index, register_view, login_view, logout_view, book_appointment, cancel_appointment
+# Dodaj api_wizyty_dnia do listy poniżej:
+from bookings.views import (
+    index, register_view, login_view, logout_view, 
+    book_appointment, cancel_appointment, api_wizyty_dnia
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +30,6 @@ urlpatterns = [
     path('wyloguj/', logout_view, name='logout'),
     path('rezerwuj/<int:service_id>/', book_appointment, name='book_appointment'),
     path('cancel/<int:appointment_id>/', cancel_appointment, name='cancel_appointment'),
+    # Tutaj usuwamy "views.", bo zaimportowaliśmy funkcję bezpośrednio:
+    path('api/wizyty/<str:data_str>/', api_wizyty_dnia, name='api_wizyty_dnia'),
 ]

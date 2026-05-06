@@ -91,3 +91,28 @@ def get_appointments_by_date(request):
         })
         
     return JsonResponse(data, safe=False)
+
+# 8. Ustawienia kalenarza rezerwacji dla użytkownika
+
+def api_wizyty_dnia(request, data_str):
+    try:
+        # Pobieramy wizyty dla konkretnego dnia
+        wizyty = Appointment.objects.filter(date=data_str).order_by('time')
+        
+        lista_wizyt = []
+        for w in wizyty:
+            # Używamy w.client, ponieważ tak zdefiniowałeś to w models.py
+            klient_nazwa = w.client.username if w.client else "Brak danych"
+            godzina_str = w.time.strftime('%H:%M') if w.time else "00:00"
+            
+            lista_wizyt.append({
+                'godzina': godzina_str,
+                'usluga': w.service.name,
+                'klient': klient_nazwa
+            })
+            
+        return JsonResponse(lista_wizyt, safe=False)
+        
+    except Exception as e:
+        print(f"BŁĄD W API WIZYT: {e}")
+        return JsonResponse({'error': str(e)}, status=500)

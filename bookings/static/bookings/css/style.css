@@ -271,7 +271,152 @@ body {
 }
 
 /* =========================================
-   8. RESPONSYWNOŚĆ
+   8. SLOTY CZASOWE W MODALU (Grafik Dnia)
+   ========================================= */
+
+/* Kontener siatki godzin */
+.time-slot-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* Podstawowy styl kafelka godziny */
+.time-slot {
+    padding: 12px 8px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    border: 2px solid transparent;
+    transition: all 0.2s ease-in-out;
+}
+
+.time-slot span {
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: block;
+}
+
+.time-slot small {
+    font-size: 0.7rem;
+    margin-top: 4px;
+    opacity: 0.9;
+}
+
+/* Styl dla WOLNEGO terminu (Zielony) */
+.time-slot.free {
+    background-color: #f0fff4;
+    border-color: #28a745;
+    color: #28a745;
+    cursor: pointer;
+}
+
+.time-slot.free:hover {
+    background-color: #28a745;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Styl dla ZAJĘTEGO terminu (Czerwony) */
+.time-slot.occupied {
+    background-color: #fff5f5;
+    border-color: #dc3545;
+    color: #dc3545;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+/* Dopasowanie szerokości modalu dla grafiku */
+#dayDetailsModal .modal-content {
+    max-width: 500px; /* Nieco szerszy, by zmieścić 3-4 kafelki w rzędzie */
+}
+
+/* =========================================
+   9. MODAL - TWOJE REZERWACJE
+   ========================================= */
+
+.appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Karta pojedynczej wizyty */
+.appointment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+}
+
+.appointment-item:hover {
+    border-color: #d63384;
+    box-shadow: 0 4px 12px rgba(214, 51, 132, 0.1);
+}
+
+/* Sekcja z informacjami o wizycie (lewa strona) */
+.app-info strong {
+    color: #d63384;
+    font-size: 1.1rem;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.app-info span {
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.app-info small {
+    display: block;
+    color: #888;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+/* Przycisk akcji (prawa strona) */
+.btn-cancel {
+    background-color: white;
+    color: #dc3545; /* Ostrzegawczy czerwony */
+    border: 1px solid #dc3545;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: bold;
+    transition: 0.3s;
+    white-space: nowrap; /* Zapobiega łamaniu tekstu w przycisku */
+}
+
+.btn-cancel:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Komunikat o braku wizyt */
+.empty-msg {
+    text-align: center;
+    color: #777;
+    padding: 20px;
+    font-style: italic;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+/* =========================================
+   10. RESPONSYWNOŚĆ
    ========================================= */
 @media (max-width: 992px) {
     .main-layout { 
