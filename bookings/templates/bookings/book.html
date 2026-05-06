@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Rezerwacja - {{ service.name }}</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f9f9f9; color: #333; padding-top: 50px; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h2 { color: #d63384; text-align: center; }
+        .form-control { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn-submit { background-color: #d63384; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 15px;}
+        .btn-submit:hover { background-color: #b02a6a; }
+        .back-link { display: block; text-align: center; margin-top: 15px; color: #555; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Rezerwacja: {{ service.name }}</h2>
+        <p style="text-align: center;">Czas trwania: {{ service.duration_minutes }} min | Cena: {{ service.price }} zł</p>
+        
+        <form method="POST">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div style="color: red; background: #fee; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div style="color: red; font-size: 12px;">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <button type="submit" class="btn-submit">Potwierdź rezerwację</button>
+    </form>
+        
+        <a href="{% url 'index' %}" class="back-link">← Powrót do cennika</a>
+    </div>
+</body>
+</html>

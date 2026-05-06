@@ -1,0 +1,26 @@
+# Folder środowiska wirtualnego (NAJWAŻNIEJSZE - zajmuje setki MB)
+venv/
+ENV/
+env/
+
+# Pliki tymczasowe Pythona
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django - pliki statyczne i uploady (zdjęcia klientów itp.)
+/static/
+/media/
+/staticfiles/
+
+# Bazy danych (mimo że masz MySQL, Django czasem tworzy plik sqlite do testów)
+*.sqlite3
+*.sqlite3-journal
+
+# Pliki konfiguracyjne z hasłami (jeśli zaczniesz używać plików .env)
+.env
+.python-version
+
+# Systemowe (Windows/Mac)
+.DS_Store
+Thumbs.db
