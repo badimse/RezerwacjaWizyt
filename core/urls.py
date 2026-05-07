@@ -1,26 +1,12 @@
-"""
-URL configuration for core project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
-# TUTAJ DODALIŚMY 'update_status' NA KOŃCU LISTY:
 from bookings.views import (
     index, register_view, login_view, logout_view, 
     book_appointment, cancel_appointment, api_wizyty_dnia, 
-    custom_dashboard, update_status
+    custom_dashboard, update_status, update_notes, 
+    toggle_staff_status, quick_book, api_admin_events, toggle_attendance, api_user_details,
+    toggle_block_user,
+    delete_user,
 )
 
 admin.site.site_header = "Panel Zarządzania Salonem"
@@ -37,6 +23,13 @@ urlpatterns = [
     path('cancel/<int:appointment_id>/', cancel_appointment, name='cancel_appointment'),
     path('api/wizyty/<str:data_str>/', api_wizyty_dnia, name='api_wizyty_dnia'),
     path('dashboard/', custom_dashboard, name='dashboard'),
-    # Teraz ta linia zadziała, bo Django "widzi" już funkcję update_status
     path('update-status/<int:appointment_id>/<str:new_status>/', update_status, name='update_status'),
+    path('update-notes/<int:appointment_id>/', update_notes, name='update_notes'),
+    path('toggle-staff/<int:user_id>/', toggle_staff_status, name='toggle_staff'),
+    path('quick-book/', quick_book, name='quick_book'),
+    path('api/admin/events/', api_admin_events, name='api_admin_events'),
+    path('toggle-attendance/<int:attendance_id>/', toggle_attendance, name='toggle_attendance'),
+    path('api/user/<int:user_id>/', api_user_details, name='api_user_details'),
+    path('block-user/<int:user_id>/', toggle_block_user, name='toggle_block_user'),
+    path('delete-user/<int:user_id>/', delete_user, name='delete_user'),
 ]

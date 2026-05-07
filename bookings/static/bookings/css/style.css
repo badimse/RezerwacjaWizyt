@@ -482,6 +482,15 @@ body {
     background-color: #b02a6a; /* Ciemniejszy róż na hover */
 }
 
+/* Styl dla: No-Show (Szary) */
+.btn-secondary-light {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    border: 1px solid #9ca3af;
+}
+.btn-secondary-light:hover { background-color: #6b7280; color: white; }
+.bg-secondary { background-color: #6b7280; }
+
 /* =========================================
    11. RESPONSYWNOŚĆ
    ========================================= */

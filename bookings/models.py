@@ -14,6 +14,11 @@ class Staff(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    # Sprytny dodatek: dzięki temu HTML i Views mogą używać 'staff.name'
+    @property
+    def name(self):
+        return f"{self.first_name} {self.last_name}"
+
 # 2. Model Usługi 
 class Service(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nazwa usługi")
@@ -31,7 +36,6 @@ class Service(models.Model):
 
 # 3. Model Wizyty 
 class Appointment(models.Model):
-    # Definicja dostępnych statusów wizyty
     STATUS_CHOICES = [
         ('PENDING', 'Oczekująca (Nowa)'),
         ('CONFIRMED', 'Potwierdzona'),
@@ -40,7 +44,6 @@ class Appointment(models.Model):
         ('NOSHOW', 'Nieobecność (No-show)'),
     ]
 
-    # Definicja źródeł rezerwacji
     SOURCE_CHOICES = [
         ('ONLINE', 'Strona WWW (Online)'),
         ('PHONE', 'Telefonicznie'),
@@ -54,7 +57,6 @@ class Appointment(models.Model):
     date = models.DateField(verbose_name="Data wizyty")
     time = models.TimeField(verbose_name="Godzina wizyty")
     
-    # Zastępujemy proste 'is_confirmed' nowym systemem statusów
     status = models.CharField(
         max_length=10, 
         choices=STATUS_CHOICES, 
@@ -69,7 +71,6 @@ class Appointment(models.Model):
         verbose_name="Źródło rezerwacji"
     )
 
-    # Nowe pole CRM: Notatki dla pracownika
     internal_notes = models.TextField(
         blank=True, 
         null=True, 
@@ -84,5 +85,36 @@ class Appointment(models.Model):
         verbose_name_plural = "Wizyty"
 
     def __str__(self):
-        # Używamy get_status_display(), aby pokazać ładną nazwę zamiast kodu (np. 'Potwierdzona')
         return f"{self.date} {self.time} - {self.client.username} ({self.get_status_display()})"
+    
+    PAYMENT_METHODS = [
+        ('CASH', 'Gotówka'),
+        ('CARD', 'Karta'),
+        ('BLIK', 'BLIK'),
+        ('VOUCHER', 'Voucher'),
+        ('OTHER', 'Inna'),
+    ]
+    
+    payment_method = models.CharField(
+        max_length=10, 
+        choices=PAYMENT_METHODS, 
+        null=True, 
+        blank=True
+    )
+
+
+# 4. NOWOŚĆ: Model Obecności (Ewidencja czasu pracy)
+class Attendance(models.Model):
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='attendances', verbose_name="Pracownik")
+    date = models.DateField(verbose_name="Data")
+    is_present = models.BooleanField(default=False, verbose_name="Obecny w pracy")
+
+    class Meta:
+        # Zabezpieczenie: dany pracownik może mieć tylko jeden wpis na dany dzień
+        unique_together = ('staff', 'date')
+        verbose_name = "Obecność"
+        verbose_name_plural = "Obecności"
+
+    def __str__(self):
+        stan = "Obecny(a)" if self.is_present else "Nieobecny(a)"
+        return f"{self.staff.first_name} {self.staff.last_name} - {self.date} - {stan}"
