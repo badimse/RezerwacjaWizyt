@@ -33,7 +33,11 @@
                 {% endif %}
 
                 <button onclick="openModal('appointmentsModal')" class="btn-nav">Moje wizyty</button>
-                <a href="{% url 'logout' %}" class="btn-logout" style="text-decoration: none; color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; margin-left: 10px;">Wyloguj się</a>
+                
+                <!-- NOWOŚĆ: Link do zmiany hasła -->
+                <a href="{% url 'password_change' %}" style="text-decoration: underline; color: white; margin-left: 15px; font-size: 0.9em; cursor: pointer;">Zmień hasło</a>
+                
+                <a href="{% url 'logout' %}" class="btn-logout" style="text-decoration: none; color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; margin-left: 15px;">Wyloguj się</a>
             {% else %}
                 <button onclick="openModal('loginModal')">Zaloguj się</button>
                 <button onclick="openModal('registerModal')">Zarejestruj się</button>
@@ -89,6 +93,12 @@
                 <input type="password" name="password" placeholder="Hasło" required>
                 <button type="submit" class="btn-submit">Wejdź</button>
             </form>
+            
+            <!-- Link do resetowania zapomnianego hasła -->
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="{% url 'password_reset' %}" style="color: #d63384; text-decoration: none; font-size: 0.9em; font-weight: bold;">Zapomniałeś hasła? Kliknij tutaj</a>
+            </div>
+            
         </div>
     </div>
 

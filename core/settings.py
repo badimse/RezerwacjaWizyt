@@ -125,3 +125,6 @@ STATICFILES_FINDERS = [
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
+
+# Wysyłaj maile do konsoli zamiast na prawdziwy serwer (do testów)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
