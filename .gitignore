@@ -23,4 +23,4 @@ __pycache__/
 
 # Systemowe (Windows/Mac)
 .DS_Store
-Thumbs.db
+Thumbs.db.env
