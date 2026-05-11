@@ -421,3 +421,21 @@ def delete_user(request, user_id):
         u.delete()
         messages.success(request, f"Użytkownik {username} został trwale usunięty.")
     return redirect('dashboard')
+
+from django.contrib.auth import login
+from django.contrib.auth.models import User
+
+def login_demo(request, role):
+    # Wybieramy użytkownika na podstawie roli
+    username = 'demo_admin' if role == 'admin' else 'demo_user'
+    
+    try:
+        user = User.objects.get(username=username)
+        login(request, user)
+        if user.is_staff:
+            return redirect('dashboard')
+        return redirect('index')
+    except User.DoesNotExist:
+        from django.contrib import messages
+        messages.error(request, f"Konto {username} nie istnieje. Stwórz je w panelu /admin!")
+        return redirect('index')

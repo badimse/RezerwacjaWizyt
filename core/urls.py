@@ -2,12 +2,12 @@ from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from django.urls import path
 from bookings.views import (
-    index, register_view, login_view, logout_view, 
+    index, login_demo, register_view, login_view, logout_view, 
     book_appointment, cancel_appointment, api_wizyty_dnia, 
     custom_dashboard, update_status, update_notes, 
     toggle_staff_status, quick_book, api_admin_events, toggle_attendance, api_user_details,
     toggle_block_user,
-    delete_user,
+    delete_user, 
 )
 
 admin.site.site_header = "Panel Zarządzania Salonem"
@@ -41,4 +41,5 @@ urlpatterns = [
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='bookings/registration/password_reset_done.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='bookings/registration/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='bookings/registration/password_reset_complete.html'), name='password_reset_complete'),
+    path('demo-login/<str:role>/', login_demo, name='demo_login'), 
 ]

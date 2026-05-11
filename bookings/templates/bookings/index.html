@@ -12,6 +12,22 @@
 </head>
 <body>
 
+    {% if not user.is_authenticated %} 
+    <div class="demo-top-bar" style="background: #2c3e50; color: white; padding: 12px 0; text-align: center; border-bottom: 3px solid #d63384; position: relative; z-index: 1000;">
+        <div class="demo-container">
+            <span class="demo-text" style="margin-right: 15px;">🚀 <strong>Tryb Portfolio:</strong> Sprawdź system bez logowania:</span>
+            <div class="demo-actions" style="display: inline-flex; gap: 10px; vertical-align: middle;">
+                <a href="{% url 'demo_login' role='user' %}" class="btn-demo-top user" style="background: #3498db; color: white; padding: 6px 15px; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 0.9em; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-user"></i> Widok Klienta
+                </a>
+                <a href="{% url 'demo_login' role='admin' %}" class="btn-demo-top admin" style="background: #d63384; color: white; padding: 6px 15px; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 0.9em; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-user-shield"></i> Panel Admina
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %} 
+
     {% if messages %}
         <div id="messages-container">
             {% for message in messages %}

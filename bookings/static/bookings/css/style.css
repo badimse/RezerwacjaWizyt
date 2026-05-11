@@ -491,6 +491,63 @@ body {
 .btn-secondary-light:hover { background-color: #6b7280; color: white; }
 .bg-secondary { background-color: #6b7280; }
 
+/* Pasek Demo na samej górze */
+.demo-top-bar {
+    background: #2c3e50; /* Ciemny, elegancki kolor */
+    color: white;
+    padding: 10px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-bottom: 3px solid #d63384; /* Akcent w kolorze Twojego salonu */
+}
+
+.demo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.demo-text {
+    font-size: 0.95em;
+}
+
+.demo-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-demo-top {
+    padding: 6px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Kolory przycisków */
+.btn-demo-top.user {
+    background-color: #3498db;
+}
+
+.btn-demo-top.admin {
+    background-color: #d63384;
+}
+
+.btn-demo-top:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+    box-shadow: 0 0 15px rgba(214, 51, 132, 0.3);
+}
+
 /* =========================================
    11. RESPONSYWNOŚĆ
    ========================================= */
