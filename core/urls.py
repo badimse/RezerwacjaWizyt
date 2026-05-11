@@ -7,7 +7,7 @@ from bookings.views import (
     custom_dashboard, update_status, update_notes, 
     toggle_staff_status, quick_book, api_admin_events, toggle_attendance, api_user_details,
     toggle_block_user,
-    delete_user, 
+    delete_user, add_service, edit_service, delete_service
 )
 
 admin.site.site_header = "Panel Zarządzania Salonem"
@@ -42,4 +42,8 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='bookings/registration/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='bookings/registration/password_reset_complete.html'), name='password_reset_complete'),
     path('demo-login/<str:role>/', login_demo, name='demo_login'), 
+    path('add-service/', add_service, name='add_service'),
+    path('edit-service/<int:service_id>/', edit_service, name='edit_service'),
+    path('delete-service/<int:service_id>/', delete_service, name='delete_service'),
+
 ]

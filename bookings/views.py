@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required 
 from django.contrib import messages
 from .models import Service, Staff, Appointment, Attendance
-from .forms import AppointmentForm
+from .forms import AppointmentForm, ServiceForm
 from django.db.models import Count
 from django.utils import timezone
 import datetime
@@ -237,6 +237,9 @@ def custom_dashboard(request):
         # Obecność i rozliczenia pracowników
         'todays_attendance': todays_attendance, 
         'staff_settlement': staff_settlement,
+
+        # Pusty formularz dodania usługi
+        'service_form': ServiceForm(),
     }
     
     return render(request, 'bookings/dashboard.html', context)
@@ -439,3 +442,39 @@ def login_demo(request, role):
         from django.contrib import messages
         messages.error(request, f"Konto {username} nie istnieje. Stwórz je w panelu /admin!")
         return redirect('index')
+    
+    # --- ZARZĄDZANIE USŁUGAMI ---
+
+@staff_member_required
+def add_service(request):
+    if request.method == 'POST':
+        form = ServiceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Nowa usługa została pomyślnie dodana!")
+        else:
+            messages.error(request, "Błąd podczas dodawania usługi. Sprawdź wprowadzane dane.")
+    return redirect('dashboard')
+
+@staff_member_required
+def edit_service(request, service_id):
+    service = get_object_or_404(Service, id=service_id)
+    
+    if request.method == 'POST':
+        form = ServiceForm(request.POST, instance=service)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Zaktualizowano usługę: {service.name}")
+            return redirect('dashboard')
+    else:
+        form = ServiceForm(instance=service)
+        
+    return render(request, 'bookings/edit_service.html', {'form': form, 'service': service})
+
+@staff_member_required
+def delete_service(request, service_id):
+    service = get_object_or_404(Service, id=service_id)
+    service_name = service.name
+    service.delete()
+    messages.success(request, f"Usługa '{service_name}' została usunięta.")
+    return redirect('dashboard')

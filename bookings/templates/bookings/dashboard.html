@@ -45,10 +45,8 @@
         .bg-success { background-color: #4caf50; }
         .bg-secondary { background-color: #6b7280; }
 
-        /* Wewnętrzny suwak dla małych list dziennych */
         .scrollable-card { max-height: 400px; overflow-y: auto; padding-right: 10px; }
 
-        /* Poprawki kalendarza */
         .fc .fc-toolbar-title { font-size: 1.4rem !important; color: #d63384 !important; font-weight: bold; }
         .fc .fc-button-primary { background-color: #2196f3 !important; border: none !important; color: white !important; padding: 8px 18px !important; min-width: 80px !important; border-radius: 6px !important; text-transform: capitalize; }
         .fc .fc-button-primary:hover { background-color: #0d47a1 !important; }
@@ -149,48 +147,6 @@
                     <h3 style="color: #d63384; margin-bottom: 20px;"><i class="fas fa-calendar-alt"></i> Grafik Miesięczny</h3>
                     <div id="adminCalendar" style="min-height: 500px;"></div>
                 </div>
-            </div> <div>
-                <div class="dashboard-card" style="border-top-color: #4caf50;">
-                    <h3 style="color: #4caf50;"><i class="fas fa-chart-pie"></i> Popularność</h3>
-                    <canvas id="servicesChart" style="margin-top: 20px;"></canvas>
-                </div>
-
-                <div class="dashboard-card" style="border-top-color: #3498db; margin-top: 20px;">
-                    <h3 style="color: #3498db;"><i class="fas fa-hand-holding-usd"></i> Struktura Płatności</h3>
-                    
-                    <canvas id="paymentsChart" style="margin-top: 20px; margin-bottom: 20px;"></canvas>
-                    
-                    <div style="border-top: 1px solid #eee; padding-top: 15px;">
-                        <p style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">Zestawienie kwotowe:</p>
-                        <table style="width: 100%; font-size: 0.9rem;">
-                            {% for item in payment_stats_summary %}
-                            <tr>
-                                <td style="padding: 5px 0;"><strong>{{ item.method }}</strong></td>
-                                <td style="text-align: right; padding: 5px 0;">{{ item.total }} zł</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-
-                <div class="dashboard-card" style="border-top-color: #9c27b0;">
-                    <h3 style="color: #9c27b0;"><i class="fas fa-users-cog"></i> Użytkownicy</h3>
-                    {% for u in users_list|slice:":5" %}
-                        <div class="admin-appointment-item">
-                            <div onclick="openUserModal({{ u.id }})" style="cursor: pointer; color: #9c27b0; font-weight: bold; text-decoration: underline; display: inline-block;">
-                                <i class="fas fa-user"></i> {{ u.username }}
-                            </div>
-                        </div>
-                    {% empty %}
-                        <p>Brak innych użytkowników.</p>
-                    {% endfor %}
-
-                    {% if users_list|length > 5 %}
-                        <button onclick="document.getElementById('modalUsers').style.display='block'" class="btn-small btn-full-width">
-                            Pokaż wszystkich ({{ users_list|length }})
-                        </button>
-                    {% endif %}
-                </div>
 
                 <div class="dashboard-card" style="border-top-color: #00bcd4;">
                     <h3 style="color: #00bcd4;"><i class="fas fa-user-check"></i> Obecność (Dziś)</h3>
@@ -237,9 +193,75 @@
                     {% endif %}
                 </div>
 
-            </div> </div> </div> 
+            </div> <div>
+                <div class="dashboard-card" style="border-top-color: #4caf50;">
+                    <h3 style="color: #4caf50;"><i class="fas fa-chart-pie"></i> Popularność</h3>
+                    <canvas id="servicesChart" style="margin-top: 20px;"></canvas>
+                </div>
 
-            <div id="modalUsers" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6);">
+                <div class="dashboard-card" style="border-top-color: #3498db; margin-top: 20px;">
+                    <h3 style="color: #3498db;"><i class="fas fa-hand-holding-usd"></i> Struktura Płatności</h3>
+                    
+                    <canvas id="paymentsChart" style="margin-top: 20px; margin-bottom: 20px;"></canvas>
+                    
+                    <div style="border-top: 1px solid #eee; padding-top: 15px;">
+                        <p style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">Zestawienie kwotowe:</p>
+                        <table style="width: 100%; font-size: 0.9rem;">
+                            {% for item in payment_stats_summary %}
+                            <tr>
+                                <td style="padding: 5px 0;"><strong>{{ item.method }}</strong></td>
+                                <td style="text-align: right; padding: 5px 0;">{{ item.total }} zł</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+
+                <div class="dashboard-card" style="border-top-color: #e91e63;">
+                    <h3 style="color: #e91e63;"><i class="fas fa-concierge-bell"></i> Zarządzanie Usługami</h3>
+                    
+                    <button onclick="document.getElementById('addServiceModal').style.display='block'" class="btn-small btn-full-width" style="background-color: #e91e63; color: white;">
+                        <i class="fas fa-plus"></i> Dodaj nową usługę
+                    </button>
+
+                    <div class="scrollable-card" style="margin-top: 15px; max-height: 250px;">
+                        {% for s in all_services %}
+                            <div class="admin-appointment-item" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>{{ s.name }}</strong><br>
+                                    <small>{{ s.price }} zł | {{ s.duration_minutes }} min</small>
+                                </div>
+                                <div class="action-buttons">
+                                    <a href="{% url 'edit_service' s.id %}" class="btn-small btn-info-light"><i class="fas fa-edit"></i></a>
+                                    <a href="{% url 'delete_service' s.id %}" class="btn-small btn-danger-light" onclick="return confirm('Usunąć usługę?')"><i class="fas fa-trash"></i></a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="dashboard-card" style="border-top-color: #9c27b0;">
+                    <h3 style="color: #9c27b0;"><i class="fas fa-users-cog"></i> Użytkownicy</h3>
+                    {% for u in users_list|slice:":5" %}
+                        <div class="admin-appointment-item">
+                            <div onclick="openUserModal({{ u.id }})" style="cursor: pointer; color: #9c27b0; font-weight: bold; text-decoration: underline; display: inline-block;">
+                                <i class="fas fa-user"></i> {{ u.username }}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>Brak innych użytkowników.</p>
+                    {% endfor %}
+
+                    {% if users_list|length > 5 %}
+                        <button onclick="document.getElementById('modalUsers').style.display='block'" class="btn-small btn-full-width">
+                            Pokaż wszystkich ({{ users_list|length }})
+                        </button>
+                    {% endif %}
+                </div>
+
+            </div> </div>
+
+    <div id="modalUsers" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6);">
         <div class="modal-content" style="background-color: white; margin: 3% auto; padding: 30px; border-radius: 15px; width: 95%; max-width: 900px; max-height: 90vh; overflow-y: auto; position: relative;">
             <span onclick="document.getElementById('modalUsers').style.display='none'" style="position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer;">&times;</span>
             <h2 style="color: #9c27b0;"><i class="fas fa-users-cog"></i> Pełna Baza Użytkowników</h2>
@@ -414,6 +436,28 @@
             </div>
             
             <button onclick="document.getElementById('paymentModal').style.display='none'" style="margin-top: 20px; background: none; border: none; color: #777; cursor: pointer; text-decoration: underline;">Anuluj</button>
+        </div>
+    </div>
+
+    <div id="addServiceModal" class="modal" style="display: none; position: fixed; z-index: 2500; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6);">
+        <div class="modal-content" style="background-color: white; margin: 5% auto; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; position: relative;">
+            <span onclick="document.getElementById('addServiceModal').style.display='none'" style="position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer;">&times;</span>
+            <h2 style="color: #e91e63;"><i class="fas fa-concierge-bell"></i> Nowa Usługa</h2>
+            
+            <form method="POST" action="{% url 'add_service' %}">
+                {% csrf_token %}
+                
+                {% for field in service_form %}
+                    <div style="margin-bottom: 15px; text-align: left;">
+                        <label for="{{ field.id_for_label }}" style="display:block; font-weight:bold; margin-bottom:5px;">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                
+                <button type="submit" class="btn-small" style="background-color: #e91e63; color: white; width: 100%; padding: 12px; margin-top: 10px; border-radius: 8px; justify-content: center;">
+                    <i class="fas fa-save"></i> Zapisz usługę
+                </button>
+            </form>
         </div>
     </div>
 

@@ -2,6 +2,7 @@ from django import forms
 from .models import Appointment
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from .models import Service
 
 class AppointmentForm(forms.ModelForm):
     class Meta:
@@ -39,3 +40,22 @@ class AppointmentForm(forms.ModelForm):
                 raise ValidationError(f"Przepraszamy, {staff.name} ma już zajęty ten termin.")
         
         return cleaned_data
+
+class ServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = ['name', 'description', 'price', 'duration_minutes', 'icon_class']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'required': 'True', 'placeholder': 'np. Strzyżenie męskie'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Opis usługi...'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'required': 'True', 'step': '0.01'}),
+            'duration_minutes': forms.NumberInput(attrs={'class': 'form-control', 'required': 'True'}),
+            'icon_class': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'np. fa-cut'}),
+        }
+        labels = {
+            'name': 'Nazwa usługi',
+            'description': 'Opis (opcjonalnie)',
+            'price': 'Cena (zł)',
+            'duration_minutes': 'Czas trwania (min)',
+            'icon_class': 'Ikona FontAwesome (np. fa-cut)',
+        }  
