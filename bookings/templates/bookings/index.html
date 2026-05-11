@@ -6,20 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Salon Urody - Rezerwacja</title>
     
-    <link rel="stylesheet" href="{% static 'bookings/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'bookings/css/style.css' %}?v=2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 </head>
 <body>
     {% if not user.is_authenticated %} 
-    <div class="demo-top-bar" style="background: #2c3e50; color: white; padding: 12px 0; text-align: center; border-bottom: 3px solid #d63384; position: relative; z-index: 1000;">
+    <div class="demo-top-bar">
         <div class="demo-container">
-            <span class="demo-text" style="margin-right: 15px;">🚀 <strong>Tryb Portfolio:</strong> Sprawdź system bez logowania:</span>
-            <div class="demo-actions" style="display: inline-flex; gap: 10px; vertical-align: middle;">
-                <a href="{% url 'demo_login' role='user' %}" class="btn-demo-top user" style="background: #3498db; color: white; padding: 6px 15px; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 0.9em; display: flex; align-items: center; gap: 5px;">
+            <span class="demo-text">🚀 <strong>Tryb Portfolio:</strong> Sprawdź system bez logowania:</span>
+            <div class="demo-actions">
+                <a href="{% url 'demo_login' role='user' %}" class="btn-demo-top user">
                     <i class="fas fa-user"></i> Widok Klienta
                 </a>
-                <a href="{% url 'demo_login' role='admin' %}" class="btn-demo-top admin" style="background: #d63384; color: white; padding: 6px 15px; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 0.9em; display: flex; align-items: center; gap: 5px;">
+                <a href="{% url 'demo_login' role='admin' %}" class="btn-demo-top admin">
                     <i class="fas fa-user-shield"></i> Panel Admina
                 </a>
             </div>
@@ -39,20 +39,18 @@
 
     <div class="navbar">
         <div class="logo"><strong>Salon Urody</strong></div>
+        
         <div class="nav-links">
             {% if user.is_authenticated %}
                 <span class="welcome-text">Witaj, {{ user.username }}!</span>
                 
                 {% if user.is_staff %}
-                    <a href="{% url 'dashboard' %}" style="background-color: white; color: #d63384; font-weight: bold; border-radius: 20px; padding: 5px 15px; text-decoration: none; margin-left: 10px; margin-right: 10px;">Mój Pulpit</a>
+                    <a href="{% url 'dashboard' %}" class="btn-solid">Mój Pulpit</a>
                 {% endif %}
 
-                <button onclick="openModal('appointmentsModal')" class="btn-nav">Moje wizyty</button>
-                
-                <!-- NOWOŚĆ: Link do zmiany hasła -->
-                <a href="{% url 'password_change' %}" style="text-decoration: underline; color: white; margin-left: 15px; font-size: 0.9em; cursor: pointer;">Zmień hasło</a>
-                
-                <a href="{% url 'logout' %}" class="btn-logout" style="text-decoration: none; color: white; border: 1px solid white; padding: 5px 15px; border-radius: 20px; margin-left: 15px;">Wyloguj się</a>
+                <button onclick="openModal('appointmentsModal')">Moje wizyty</button>
+                <a href="{% url 'password_change' %}" class="btn-text-only">Zmień hasło</a>
+                <a href="{% url 'logout' %}" class="btn-logout">Wyloguj się</a>
             {% else %}
                 <button onclick="openModal('loginModal')">Zaloguj się</button>
                 <button onclick="openModal('registerModal')">Zarejestruj się</button>

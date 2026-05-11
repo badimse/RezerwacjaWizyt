@@ -17,24 +17,65 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 20px; /* Odstęp między logo a całą grupą linków */
     color: white;
 }
 
+.nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px; /* Gwarantuje 15px odstępu zarówno w poziomie, jak i W PIONIE! */
+}
+
+.welcome-text {
+    font-weight: 500;
+}
+
+/* Globalny styl dla przycisków w menu */
 .navbar a, .navbar button {
     color: white;
     text-decoration: none;
-    background: none;
+    background: transparent;
     border: 1px solid white;
-    padding: 5px 15px;
+    padding: 8px 18px;
     border-radius: 20px;
     cursor: pointer;
-    margin-left: 10px;
+    margin: 0; /* Reset starych marginesów */
     transition: 0.3s;
+    white-space: nowrap; /* Zapobiega łamaniu tekstu wewnątrz przycisku */
+    font-size: 0.95rem;
+    display: inline-block; /* Kluczowe: zapobiega nakładaniu się ramek w pionie */
+    line-height: 1.5;
 }
 
 .navbar a:hover, .navbar button:hover {
     background: white;
     color: #d63384;
+}
+
+/* Unikalne style dla konkretnych przycisków */
+.navbar a.btn-solid {
+    background-color: white;
+    color: #d63384;
+    font-weight: bold;
+}
+
+.navbar a.btn-solid:hover {
+    background-color: #f8f9fa;
+}
+
+.navbar a.btn-text-only {
+    border: none;
+    text-decoration: underline;
+    padding: 8px 5px;
+    background: transparent;
+}
+
+.navbar a.btn-text-only:hover {
+    background: transparent;
+    color: #ffe6f0;
 }
 
 /* =========================================
@@ -551,15 +592,42 @@ body {
 /* =========================================
    11. RESPONSYWNOŚĆ
    ========================================= */
+
 @media (max-width: 992px) {
     .main-layout { 
         flex-direction: column; 
     }
+    
     .calendar-sidebar { 
         width: 100%; 
         position: static; 
     }
+
+    /* Wymuszamy układ pionowy (kolumnę) dla nawigacji */
     .navbar {
-        padding: 15px 20px;
+        flex-direction: column !important;
+        padding: 20px;
+        gap: 15px;
+    }
+    
+    .nav-links {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto;
+        gap: 10px;
+    }
+
+    /* Wymuszamy, by przyciski zajęły całą dostępną szerokość */
+    .navbar a, 
+    .navbar button, 
+    .welcome-text {
+        width: 100% !important;
+        text-align: center !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        display: block !important;
     }
 }
